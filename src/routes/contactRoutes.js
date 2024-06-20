@@ -1,11 +1,11 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { getRecords, createRecord, updateRecord, deleteRecord } = require('../controllers/clientsCountController');
+const { getRecords, createRecord, updateRecord, deleteRecord } = require('../controllers/contactController');
 const verifyToken = require('../JWT/auth');
 
 const router = express.Router();
 
-router.get('/getClients', async (req, res) => {
+router.get('/getrecords', async (req, res) => {
     try {
         await getRecords(req, res);
     } catch (error) {
@@ -13,7 +13,7 @@ router.get('/getClients', async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-router.get('/getClientsRecord', verifyToken, async (req, res) => {
+router.get('/getContactRecords', verifyToken, async (req, res) => {
     try {
         await getRecords(req, res);
     } catch (error) {
@@ -21,10 +21,12 @@ router.get('/getClientsRecord', verifyToken, async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-
-router.post('/create', verifyToken, [
-    body('counter').notEmpty(),
-    body('name').notEmpty(),
+router.post('/records', [
+    body('name').notEmpty().withMessage('Name cannot be empty'),
+    body('email').isEmail().withMessage('Invalid email format'),
+    body('message').notEmpty().withMessage('Message cannot be empty'),
+    body('phone').notEmpty().withMessage('Phone cannot be empty').isLength({ min: 10, max: 10 }).withMessage('Phone must be 10 digits long'),
+    body('website').notEmpty().withMessage('Website cannot be empty')
 ], async (req, res) => {
     try {
         await createRecord(req, res);
@@ -34,7 +36,7 @@ router.post('/create', verifyToken, [
     }
 });
 
-router.put('/update/:id', verifyToken, async (req, res) => {
+router.put('/records/:id',verifyToken, async (req, res) => {
     try {
         await updateRecord(req, res);
     } catch (error) {
@@ -43,7 +45,7 @@ router.put('/update/:id', verifyToken, async (req, res) => {
     }
 });
 
-router.delete('/delete/:id', verifyToken, async (req, res) => {
+router.delete('/records/:id', verifyToken, async (req, res) => {
     try {
         await deleteRecord(req, res);
     } catch (error) {

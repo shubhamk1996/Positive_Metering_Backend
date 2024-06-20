@@ -1,8 +1,8 @@
 // recordsController.js
 const { validationResult } = require('express-validator');
-const recordModel = require('../models/cultureCategoryModal');
+const recordModel = require('../models/contactModal');
 
-function getCultureCategoryRecords(req, res) {
+function getRecords(req, res) {
     try {
         recordModel.getAllRecords((err, results) => {
             if (err) {
@@ -12,12 +12,12 @@ function getCultureCategoryRecords(req, res) {
             res.json(results);
         });
     } catch (error) {
-        console.error('Error in getCultureCategoryRecords:', error);
+        console.error('Error in getRecords:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-function createCultureCategoryRecord(req, res) {
+function createRecord(req, res) {
     try {
         const errors = validationResult(req);
         const recordData = req.body;
@@ -29,12 +29,12 @@ function createCultureCategoryRecord(req, res) {
             res.status(201).json({ message: 'Record created successfully', result: recordData });
         });
     } catch (error) {
-        console.error('Error in createCultureCategoryRecord:', error);
+        console.error('Error in createRecord:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-function updateCultureCategoryRecord(req, res) {
+function updateRecord(req, res) {
     try {
         const { id } = req.params;
         const recordData = req.body;
@@ -46,12 +46,12 @@ function updateCultureCategoryRecord(req, res) {
             res.send('Record updated successfully');
         });
     } catch (error) {
-        console.error('Error in updateCultureCategoryRecord:', error);
+        console.error('Error in updateRecord:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-function deleteCultureCategoryRecord(req, res) {
+function deleteRecord(req, res) {
     try {
         const { id } = req.params;
         recordModel.deleteRecord(id, (err, result) => {
@@ -62,14 +62,14 @@ function deleteCultureCategoryRecord(req, res) {
             res.send('Record deleted successfully');
         });
     } catch (error) {
-        console.error('Error in deleteCultureCategoryRecord:', error);
+        console.error('Error in deleteRecord:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
 module.exports = {
-    getCultureCategoryRecords,
-    createCultureCategoryRecord,
-    updateCultureCategoryRecord,
-    deleteCultureCategoryRecord
+    getRecords,
+    createRecord,
+    updateRecord,
+    deleteRecord
 };
